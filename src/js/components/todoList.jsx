@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+
 const todoList = () => { 
     const [list, setList] = useState([])
     const [value, setValue] = useState("")
@@ -21,6 +22,7 @@ const todoList = () => {
             placeholder="What needs to be done?"
             value={value} 
             onChange={(e) => setValue(e.target.value)}
+            onKeyDown={addTodo}
             />
 
             <ul>
@@ -37,4 +39,4 @@ const todoList = () => {
     )
 }
 
-export default TodoList;
+export default todoList;

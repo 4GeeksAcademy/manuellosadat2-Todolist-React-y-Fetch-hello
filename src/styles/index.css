@@ -68,3 +68,17 @@ body {
   font-size: 14px;
   color: #777;
 }
+
+.todoList button{
+  border: none;
+  background-color: #fff;
+  color: rgb(224, 147, 147);
+}
+
+.todoList li button {
+  display: none;
+}
+
+.todoList li:hover button {
+  display: block;
+}
