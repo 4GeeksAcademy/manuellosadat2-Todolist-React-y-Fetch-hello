@@ -16,6 +16,8 @@ const todoList = () => {
         setList(list.filter((_,index) => index !== indexToDelete));
     }
     return(
+    <>
+        <h1 className="tittle">Todos</h1>
         <div className="todoList">
             <input 
             type="text"
@@ -36,6 +38,7 @@ const todoList = () => {
 
             <p>{list.length} item left</p>
         </div>
+    </>
     )
 }
 
