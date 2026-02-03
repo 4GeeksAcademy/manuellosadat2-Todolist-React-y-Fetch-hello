@@ -1,45 +1,81 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
+const USERNAME = "manu_todo";
 
-const todoList = () => { 
-    const [list, setList] = useState([])
-    const [value, setValue] = useState("")
+const TodoList = () => {
+    const [list, setList] = useState([]);
+    const [value, setValue] = useState("");
 
-    const addTodo = (e) =>{
-        if(e.key === "Enter" && value.trim() !== ""){
-            setList([...list, value]);
-            setValue("");
+    const createUser = () => {
+        fetch(`https://playground.4geeks.com/todo/users/${USERNAME}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify([])
+        }).catch(() => {});
+    };
+
+    const getTodos = () => {
+        fetch(`https://playground.4geeks.com/todo/users/${USERNAME}`)
+            .then(resp => resp.json())
+            .then(data => setList(data.todos))
+            .catch(err => console.log(err));
+    };
+
+    const addTodo = (e) => {
+        if (e.key === "Enter" && value.trim() !== "") {
+            const newTask = { label: value, done: false };
+
+            fetch(`https://playground.4geeks.com/todo/todos/${USERNAME}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newTask)
+            })
+            .then(() => {
+                getTodos();
+                setValue("");
+            });
         }
     };
 
-    const deleteTodo = (indexToDelete) => {
-        setList(list.filter((_,index) => index !== indexToDelete));
-    }
-    return(
-    <>
-        <h1 className="tittle">Todos</h1>
-        <div className="todoList">
-            <input 
-            type="text"
-            placeholder="What needs to be done?"
-            value={value} 
-            onChange={(e) => setValue(e.target.value)}
-            onKeyDown={addTodo}
-            />
+    const deleteTodo = (id) => {
+        fetch(`https://playground.4geeks.com/todo/todos/${id}`, {
+            method: "DELETE"
+        })
+        .then(() => getTodos())
+        .catch(err => console.log(err));
+    };
 
-            <ul>
-                {list.map((item,index) => (
-                    <li key={index}>
-                        <span>{item}</span>
-                        <button onClick={() => deleteTodo(index)}>x</button>
-                    </li>
-                ))}
-            </ul>
+    useEffect(() => {
+        createUser();
+        getTodos();
+    }, []);
 
-            <p>{list.length} item left</p>
-        </div>
-    </>
-    )
-}
+    return (
+        <>
+            <h1 className="tittle">Todos</h1>
+            <div className="todoList">
+                <input
+                    type="text"
+                    placeholder="What needs to be done?"
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    onKeyDown={addTodo}
+                />
 
-export default todoList;
+                <ul>
+                    {list.map(item => (
+                        <li key={item.id}>
+                            <span>{item.label}</span>
+                            <button onClick={() => deleteTodo(item.id)}>x</button>
+                        </li>
+                    ))}
+                </ul>
+
+                <p>{list.length} items left</p>
+            </div>
+        </>
+    );
+};
+
+export default TodoList;
+
