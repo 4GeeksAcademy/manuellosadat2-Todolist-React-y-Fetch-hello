@@ -45,6 +45,22 @@ const TodoList = () => {
         .catch(err => console.log(err));
     };
 
+    const clearAll = () => {
+        const deletePromises = list.map(task => {
+            return fetch(`https://playground.4geeks.com/todo/todos/${task.id}`,{
+                method: "DELETE"
+            })
+        })
+
+        Promise.all(deletePromises)
+        .then(() => {
+            getTodos()
+        })
+        .catch(error => {
+            console.log("ERROR AL BORRAR TODO", error);
+        })
+    }
+
     useEffect(() => {
         createUser();
         getTodos();
@@ -72,6 +88,7 @@ const TodoList = () => {
                 </ul>
 
                 <p>{list.length} items left</p>
+                <button className="clearAll" onClick={clearAll}>Clear all</button>
             </div>
         </>
     );

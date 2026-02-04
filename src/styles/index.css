@@ -83,3 +83,7 @@ body {
 .todoList li:hover button {
   display: block;
 }
+
+.clearAll{
+  padding: 10px;
+}
