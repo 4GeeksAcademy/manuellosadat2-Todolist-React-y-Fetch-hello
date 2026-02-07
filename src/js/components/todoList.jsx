@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react";
+import React, { useRef } from 'react';
+import emailjs from '@emailjs/browser';
+
 
 const USERNAME = "manu_todo";
 
@@ -61,6 +64,36 @@ const TodoList = () => {
         })
     }
 
+    const sendEmail = () => {
+    if (list.length === 0) {
+        alert("No hay tareas para enviar 😅");
+        return;
+    }
+
+    const todosText = list
+        .map(task => `• ${task.label}`)
+        .join("\n");
+
+    console.log("ENVIANDO EMAIL CON:", todosText); // 👈 DEBUG
+
+    emailjs.send(
+        "service_vppyo7g",        // ✅ TU SERVICE
+        "template_6akm30n",        // ⚠️ TU TEMPLATE REAL
+        {
+            todos: todosText
+        },
+        "cHFTu0TxS2OEjV4qo"      // ⚠️ TU PUBLIC KEY REAL
+    )
+    .then(() => {
+        alert("📧 Lista enviada correctamente");
+    })
+    .catch(error => {
+        console.error("ERROR AL ENVIAR EMAIL:", error);
+        alert("❌ Error enviando el email");
+    });
+};
+
+
     useEffect(() => {
         createUser();
         getTodos();
@@ -89,6 +122,10 @@ const TodoList = () => {
 
                 <p>{list.length} items left</p>
                 <button className="clearAll" onClick={clearAll}>Clear all</button>
+            
+                <button className="botonEmail" onClick={sendEmail}>
+                    Enviar lista por email 📧
+                </button>
             </div>
         </>
     );

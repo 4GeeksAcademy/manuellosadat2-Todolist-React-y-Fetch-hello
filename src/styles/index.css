@@ -87,3 +87,8 @@ body {
 .clearAll{
   padding: 10px;
 }
+
+.botonEmail{
+  position: relative;
+  left: 5rem;
+}
